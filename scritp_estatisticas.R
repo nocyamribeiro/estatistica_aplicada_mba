@@ -42,8 +42,10 @@ library(ggplot2)
 
 scatter.smooth(base_trabalhada$ALUNADO, base_trabalhada$TOTAL_RECEBIDO_ADESAO, pch='.', col = "blue")
 grafico <- ggplot(base_trabalhada, aes(ALUNADO, TOTAL_RECEBIDO_ADESAO), pch = '.')
-grafico <- grafico + geom_point(col = "blue" , size = 1, xlab = "Alunado", ylab = "Total Recebido")
+grafico <- grafico + geom_point(col = "blue" , size = 1)
 grafico <- grafico + geom_smooth(col = "black")
+grafico <- grafico + labs(x = "Alunado")
+grafico <- grafico + labs(y = "Total Recebido")
 
 png("/home/indra/Documentos/estatistica_aplicada_mba/relacao_alunado_total_investido.png")
 grafico
