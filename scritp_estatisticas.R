@@ -34,3 +34,17 @@ dev.off()
 png("/home/maycon/Documentos/MBA/Estatística Aplicada/histograma_total_recebido_geral.png")
 hist(base_trabalhada$TOTAL_RECEBIDO_ADESAO, breaks = 30 , ylim= c(0, 13000), xlim = c(0, max(base_trabalhada$TOTAL_RECEBIDO_ADESAO)), col = c("blue", "black"), main = "Histograma de Total Recebido", ylab = "Frequência", xlab = "Total Recebido")
 dev.off()
+
+plot(x = base_trabalhada$ALUNADO, y = base_trabalhada$TOTAL_RECEBIDO_ADESAO)
+install.packages("ggplot2")
+library(plyr)
+library(ggplot2)
+
+scatter.smooth(base_trabalhada$ALUNADO, base_trabalhada$TOTAL_RECEBIDO_ADESAO, pch='.', col = "blue")
+grafico <- ggplot(base_trabalhada, aes(ALUNADO, TOTAL_RECEBIDO_ADESAO), pch = '.')
+grafico <- grafico + geom_point(col = "blue" , size = 1, xlab = "Alunado", ylab = "Total Recebido")
+grafico <- grafico + geom_smooth(col = "black")
+
+png("/home/indra/Documentos/estatistica_aplicada_mba/relacao_alunado_total_investido.png")
+grafico
+dev.off()
