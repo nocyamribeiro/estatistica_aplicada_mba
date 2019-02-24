@@ -198,8 +198,32 @@ pct_regiao <- round(soma_alunos_regiao$x/sum(soma_alunos_regiao$x)*100, digits =
 labels_regiao <- soma_alunos_regiao$Group.1
 lbls_regiao <- paste(labels_regiao, pct_regiao) # add percents to labels
 lbls_regiao <- paste(lbls_regiao,"%",sep="")
-label_pizza_regiao <- soma_alunos_por_estado$x
+label_pizza_regiao <- soma_alunos_regiao$x
 pie_regiao <- pie(soma_alunos_regiao$x, radius=1, labels = label_pizza_regiao, col=rainbow(length(lbls_regiao)), main="Alunado por Região")
-text(label_pizza_regiao)
 legend("topright", ncol = 1,lbls_regiao, cex=0.7,fill=rainbow(length(soma_alunos_regiao$x)))
 
+soma_recebimentos_regiao <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$REGIAO), sum, na.rm = T)
+soma_recebimentos_regiao[order(soma_recebimentos_regiao$x), ]
+
+
+soma_recebimentos_estado <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$UF_ESCOLA), sum, na.rm = T)
+soma_recebimentos_estado[order(soma_recebimentos_estado$x), ]
+
+soma_alunado_estado <- aggregate(base_trabalhada$ALUNADO, list(base_trabalhada$UF_ESCOLA), sum, na.rm = T)
+soma_alunado_estado[order(soma_alunado_estado$x), ]
+
+base_trabalhada$RECEBIMENTO_POR_ALUNO <- base_trabalhada$TOTAL_RECEBIDO_ADESAO / base_trabalhada$ALUNADO
+media_recebimentos_por_aluno <- aggregate(base_trabalhada$RECEBIMENTO_POR_ALUNO , list(base_trabalhada$UF_ESCOLA), mean, na.rm = T)
+media_recebimentos_por_aluno[order(media_recebimentos_por_aluno$x), ]
+
+summary(base_trabalhada$RECEBIMENTO_POR_ALUNO)
+max(soma_alunado_estado$x)
+
+soma_recebimento_por_localizacao <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$LOCALIZACAO_ESCOLA), sum, na.rm = T)
+soma_recebimento_por_localizacao[order(soma_recebimento_por_localizacao$x),]
+
+media_recebimento_por_localizacaco <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$LOCALIZACAO_ESCOLA), mean, na.rm = T)
+media_recebimento_por_localizacaco[order(media_recebimento_por_localizacaco$x),]
+
+media_recebimento_por_aluno_por_localizacao <- aggregate(base_trabalhada$RECEBIMENTO_POR_ALUNO, list(base_trabalhada$LOCALIZACAO_ESCOLA), mean, na.rm = T)
+media_recebimento_por_aluno_por_localizacao[order(media_recebimento_por_aluno_por_localizacao$x),]
