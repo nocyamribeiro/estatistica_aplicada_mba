@@ -160,17 +160,42 @@ soma_alunos_por_estado
 pct <- round(soma_alunos_por_estado$x/sum(soma_alunos_por_estado$x)*100, digits = 2)
 labels <- soma_alunos_por_estado$Group.1
 lbls <- paste(labels, pct) # add percents to labels
-lbls <- paste(lbls,"%",sep="")
-pie <- pie(soma_alunos_por_estado$x, radius=1, labels = "", col=rainbow(length(lbls)), main="Alunado por estado")
-par(mar=c(2, 2, 2, 2))
-legend("topright", ncol = 2,lbls, cex=0.7,fill=rainbow(length(soma_alunos_por_estado$x)))
 
+lbls <- paste(lbls,"%",sep="")
+
+pie <- pie(soma_alunos_por_estado$x, radius=1, labels = soma_alunos_por_estado$x, col=rainbow(length(lbls)), main="Alunado por estado")
+legend("bottom", bty = "n", yjust=0, xjust = 0.5, ncol = 10,lbls, cex=0.6,fill=rainbow(length(soma_alunos_por_estado$x)))
+
+
+# Create a basic bar
+valor_legenda <- paste0(soma_alunado_estado$Group.1 ," ", round(soma_alunos_por_estado$x/sum(soma_alunos_por_estado$x)*100, digits = 2), "%")
+pie = ggplot(soma_alunos_por_estado, aes(x="", y=x, fill=valor_legenda)) + geom_bar(stat="identity", width=1)
+
+#valor_legenda <- paste0(round(soma_alunos_por_estado$x/sum(soma_alunos_por_estado$x)*100, digits = 2), "%")
+# Convert to pie (polar coordinates) and add labels
+pie = pie + coord_polar("y", start=0) + geom_text(aes(label = ""), position = position_stack(vjust = 0.5))
+
+# Add color scale (hex colors)
+#pie = pie + scale_fill_manual(values=c("#55DDE0", "#33658A", "#2F4858", "#F6AE2D", "#F26419", "#999999")) 
+
+# Remove labels and add title
+pie = pie + labs(x = NULL, y = NULL, fill = NULL, title = "Alunos por estado")
+
+# Limpa os dados de fora
+pie = pie + theme_classic() + theme(axis.line = element_blank(),
+                                    
+                                    axis.text = element_blank(),
+                                    axis.ticks = element_blank(),
+                                    plot.title = element_text(hjust = 0.5, color = "#666666"))
+
+?legend
 resetPar <- function() {
   dev.new()
   op <- par(no.readonly = TRUE)
   dev.off()
   op
 }
+
 
 par(resetPar())
 
@@ -225,5 +250,32 @@ soma_recebimento_por_localizacao[order(soma_recebimento_por_localizacao$x),]
 media_recebimento_por_localizacaco <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$LOCALIZACAO_ESCOLA), mean, na.rm = T)
 media_recebimento_por_localizacaco[order(media_recebimento_por_localizacaco$x),]
 
+media_recebimento_por_estado <- aggregate(base_trabalhada$TOTAL_RECEBIDO_ADESAO, list(base_trabalhada$UF_ESCOLA), mean, na.rm = T)
+media_recebimento_por_estado[order(media_recebimento_por_estado$Group.1),]
+
+write.csv(media_recebimento_por_estado, file = "/home/maycon/Documentos/MBA/Estatística Aplicada/media_recebimento_por_estado.csv")
+
+media_alunado_por_localizacaco <- aggregate(base_trabalhada$ALUNADO, list(base_trabalhada$LOCALIZACAO_ESCOLA), mean, na.rm = T)
+media_alunado_por_localizacaco[order(media_alunado_por_localizacaco$x),]
+
 media_recebimento_por_aluno_por_localizacao <- aggregate(base_trabalhada$RECEBIMENTO_POR_ALUNO, list(base_trabalhada$LOCALIZACAO_ESCOLA), mean, na.rm = T)
 media_recebimento_por_aluno_por_localizacao[order(media_recebimento_por_aluno_por_localizacao$x),]
+
+media_alunado_por_estado <- aggregate(base_trabalhada$ALUNADO, list(base_trabalhada$UF_ESCOLA), mean, na.rm = T)
+media_alunado_por_estado[order(media_alunado_por_estado$Group.1),]
+
+View(media_alunado_por_estado)
+
+write.csv(base_trabalhada, file = "/home/maycon/Documentos/MBA/Estatística Aplicada/base_trabalhada_completa.csv")
+
+View(subset(base_trabalhada, subset = base_trabalhada$ALUNADO == max(base_trabalhada$ALUNADO)))
+sum(base_trabalhada$ALUNADO)
+
+media_alunado_por_localizacaco_estado <- aggregate(base_trabalhada$ALUNADO, list(base_trabalhada$LOCALIZACAO_ESCOLA, base_trabalhada$UF_ESCOLA), mean, na.rm = T)
+media_alunado_por_localizacaco_estado[order(media_alunado_por_localizacaco_estado$Group.2),]
+
+names(media_alunado_por_localizacaco_estado) <- c("LOCALIZACAO", "UF", "MEDIA_ALUNADO")
+media_alunado_por_localizacaco_estado
+
+write.csv(media_alunado_por_localizacaco_estado, file = "/home/maycon/Documentos/MBA/Estatística Aplicada/media_aluno_por_estado_localizacao.csv")
+soma_alunos_regiao
